@@ -142,12 +142,12 @@ unsigned char numNotesPAC = 39;
 unsigned char buttonZelda; //variables for Zelda song
 unsigned char notesIncZelda;
 unsigned char lengthIncZelda;
-unsigned char numNotesZelda = 43;
+unsigned char numNotesZelda = 44;
 
 unsigned char buttonSW; //variables for Star Wars Son "Imperial March"
 unsigned char notesIncSW;
 unsigned char lengthIncSW;
-unsigned char numNotesSW = 37;
+unsigned char numNotesSW = 38;
 
 unsigned char buttonStop; //variable for stop button
 
