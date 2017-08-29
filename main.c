@@ -1,4 +1,4 @@
-/*	Partner(s) Name & E-mail:Shane Owens sowen003@ucr.edu 861197209
+/*	Name & E-mail:Shane Owens 
  *	Assignment: Custom Lab Assignment
  *	Exercise Description: Jukebox that will play Star wars, PACMAN and Zelda songs on a piezo buzzer.
  *	
@@ -220,7 +220,7 @@ double lengthSW[] = //length of notes played for star wars song
 void TickPAC() //Tick function for PACMAN
 {
 	buttonPAC = ~PINA & 0x01;
-	buttonStop =~PINA & 0x08;
+	buttonStop = ~PINA & 0x08;
 	switch(PACstate)
 	{
 		case Start0:
@@ -263,7 +263,19 @@ void TickPAC() //Tick function for PACMAN
 			i = 0;
 			notesIncPAC++;
 			lengthIncPAC++;
-			if(notesIncPAC == numNotesPAC||buttonStop)
+			
+			if(buttonStop)
+			{
+				i = 0;
+				notesIncPAC= 0;
+				lengthIncPAC =0;
+				PACstate = Init0;
+			}
+			else
+			{
+				PACstate = Play0;
+			}
+			if(notesIncPAC == numNotesPAC)
 			{
 				PACstate = Init0;
 			}
@@ -271,6 +283,7 @@ void TickPAC() //Tick function for PACMAN
 			{
 				set_PWM(notesPAC[notesIncPAC]);
 			}
+			
 		}
 		break;
 		
@@ -282,7 +295,7 @@ void TickPAC() //Tick function for PACMAN
 void TickZelda() //Tick function for Zelda song
 {
 	buttonZelda = ~PINA & 0x02;
-		buttonStop =~PINA & 0x08;
+	buttonStop =~PINA & 0x08;
 
 	switch(Zeldastate)
 	{
@@ -319,7 +332,7 @@ void TickZelda() //Tick function for Zelda song
 		
 		
 		case Play1:
-		if(j < lengthZelda[lengthIncZelda])
+		if(j < lengthZelda[lengthIncZelda] && (!buttonStop))
 		{
 			j++;
 		}
@@ -328,10 +341,21 @@ void TickZelda() //Tick function for Zelda song
 			j = 0;
 			notesIncZelda++;
 			lengthIncZelda++;
+			
+			if(buttonStop)
+			{
+				j = 0;
+				notesIncZelda = 0;
+				lengthIncZelda = 0;
+				Zeldastate = Init1;
+			}
+			else
+			{
+				Zeldastate = Play1;
+			}
 			if(notesIncZelda == numNotesZelda)
 			{
 				Zeldastate = Init1;
-				buttonZelda = ~PINA & 0x00;
 			}
 			else
 			{
@@ -393,6 +417,10 @@ void TickSW() //Tick function for Star Wars song
 			k = 0;
 			notesIncSW++;
 			lengthIncSW++;
+			if(buttonStop)
+			{
+				SWstate = Init2;
+			}
 			if(notesIncSW == numNotesSW)
 			{
 				SWstate = Init2;
