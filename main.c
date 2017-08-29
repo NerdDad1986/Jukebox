@@ -149,7 +149,7 @@ unsigned char notesIncSW;
 unsigned char lengthIncSW;
 unsigned char numNotesSW = 37;
 
-unsigned char stopbutton; //variable for stop button
+unsigned char buttonStop; //variable for stop button
 
 unsigned char i = 0; //variables for the counters within the song code
 unsigned char j = 0;
@@ -158,6 +158,7 @@ unsigned char k = 0;
 enum PACstates {Start0, Init0, Ready0, Play0} PACstate; //enum for state machines
 enum Zeldastates {Start1, Init1, Ready1, Play1} Zeldastate;
 enum SWstates {Start2, Init2, Ready2, Play2} SWstate;
+enum Stopstates {Start3, Init3, Stop1} Stopstate;
 
 
 double notesPAC[] = //notes for pacman song
@@ -219,7 +220,7 @@ double lengthSW[] = //length of notes played for star wars song
 void TickPAC() //Tick function for PACMAN
 {
 	buttonPAC = ~PINA & 0x01;
-	
+	buttonStop =~PINA & 0x08;
 	switch(PACstate)
 	{
 		case Start0:
@@ -253,7 +254,7 @@ void TickPAC() //Tick function for PACMAN
 		
 		
 		case Play0:
-		if(i < lengthPAC[lengthIncPAC])
+		if(i < lengthPAC[lengthIncPAC] && (!buttonStop))
 		{
 			i++;
 		}
@@ -262,7 +263,7 @@ void TickPAC() //Tick function for PACMAN
 			i = 0;
 			notesIncPAC++;
 			lengthIncPAC++;
-			if(notesIncPAC == numNotesPAC)
+			if(notesIncPAC == numNotesPAC||buttonStop)
 			{
 				PACstate = Init0;
 			}
@@ -281,7 +282,8 @@ void TickPAC() //Tick function for PACMAN
 void TickZelda() //Tick function for Zelda song
 {
 	buttonZelda = ~PINA & 0x02;
-	
+		buttonStop =~PINA & 0x08;
+
 	switch(Zeldastate)
 	{
 		case Start1:
@@ -346,7 +348,7 @@ void TickZelda() //Tick function for Zelda song
 void TickSW() //Tick function for Star Wars song
 {
 	buttonSW = ~PINA & 0x04;
-	
+
 	switch(SWstate)
 	{
 		case Start2:
@@ -475,20 +477,14 @@ int main(void)
 	
 	PWM_on(); //turn on PWM
 	TimerOn(); //turn timer on
-	
+
 	while(1)
-	{
+	{	
+		buttonStop =~PINA & 0x08;
 		TimerSet(10); //set time
 		TickPAC(); //call songs
 		TickZelda();
 		TickSW();
-		
-		stopbutton = ~PINA & 0x08;
-		
-		if (stopbutton)
-		{
-			PORTB = 0x00;
-		}
 		
 		while(!TimerFlag){}
 		TimerFlag = 0;
