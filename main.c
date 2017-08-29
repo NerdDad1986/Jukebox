@@ -181,46 +181,47 @@ double lengthPAC[] = //length of notes played in pacman song
 
 double notesZelda[] = //notes for zelda song
 {
-	zelda_D5, zelda_F5, zelda_D6, zelda_D5, zelda_F5, zelda_D6, zelda_D6, zelda_E6, zelda_F6, zelda_E6, 
+	0.00, zelda_D5, zelda_F5, zelda_D6, zelda_D5, zelda_F5, zelda_D6, zelda_D6, zelda_E6, zelda_F6, zelda_E6, 
 	zelda_F6, zelda_E6, zelda_C6, zelda_A5, zelda_A5,zelda_D5, zelda_F5, zelda_G5, zelda_A5, zelda_A5, 
 	zelda_D5, zelda_F5, zelda_G5, zelda_E5, zelda_D5, zelda_F5, zelda_D6, zelda_D5, zelda_F5, zelda_D6, 
 	zelda_E6, zelda_F6, zelda_E6, zelda_C6, zelda_A5, zelda_A5, zelda_D5, zelda_F5, zelda_G5, zelda_A5, 
 	zelda_A5, zelda_D5, 0.00
 	
-}; //43 COUNT
+}; //44 COUNT
 
 double lengthZelda[] = // length of notes played in zelda song
 {
-	10, 10, 20, 10, 10, 20, 20, 10, 10, 10, 
+	10, 10, 10, 20, 10, 10, 20, 20, 10, 10, 10, 
 	10, 10, 10, 20, 20, 10, 10, 10, 20, 20, 
 	10, 10, 10, 10, 10, 20, 10, 10, 20, 20, 
 	10, 10, 10, 10, 10, 20, 20, 10, 10, 30, 
 	20, 30, 1
 
-}; //COUNT 43
+}; //COUNT 44
 
 double notesSW[] = //notes for Star Wars song
 {
-	SW_A, SW_A, SW_A, SW_F, SW_CH, SW_A, SW_F, SW_CH, SW_A, SW_EH, 
+	0.00, SW_A, SW_A, SW_A, SW_F, SW_CH, SW_A, SW_F, SW_CH, SW_A, SW_EH, 
 	SW_EH, SW_EH, SW_FH, SW_CH, SW_GS, SW_F, SW_CH, SW_A, 0.00, SW_AH, 
 	SW_A, SW_A, SW_AH, SW_GSH, SW_GH, SW_FSH, SW_FH, SW_FSH, 0.00, SW_AS, 
 	SW_DSH, SW_DH, SW_CSH, SW_CH, SW_B, SW_CH, 0.00
 
-}; //37 COUNT
+}; //38 COUNT
 	
 double lengthSW[] = //length of notes played for star wars song
 {
-	50, 50, 50, 35, 15, 50, 35, 15, 65, 50,
+	10, 50, 50, 50, 35, 15, 50, 35, 15, 65, 50,
 	50, 50, 50, 35, 15, 50, 35, 15, 50, 35, 
 	15, 65, 50, 50, 30, 15, 50, 32.5, 17.5, 15, 
 	15, 25, 32.5, 25, 50, 32.5, 1
 	
-}; //37 COUNT
+}; //38 COUNT
 		
 void TickPAC() //Tick function for PACMAN
 {
-	buttonPAC = ~PINA & 0x01;
-	buttonStop = ~PINA & 0x08;
+	//buttonPAC = ~PINA & 0x01;
+	//buttonStop = ~PINA & 0x08;
+	
 	switch(PACstate)
 	{
 		case Start0:
@@ -267,8 +268,8 @@ void TickPAC() //Tick function for PACMAN
 			if(buttonStop)
 			{
 				i = 0;
-				notesIncPAC= 0;
-				lengthIncPAC =0;
+				notesIncPAC = 0;
+				lengthIncPAC = 0;
 				PACstate = Init0;
 			}
 			else
@@ -294,8 +295,8 @@ void TickPAC() //Tick function for PACMAN
 }
 void TickZelda() //Tick function for Zelda song
 {
-	buttonZelda = ~PINA & 0x02;
-	buttonStop =~PINA & 0x08;
+	//buttonZelda = ~PINA & 0x02;
+	//buttonStop =~PINA & 0x08;
 
 	switch(Zeldastate)
 	{
@@ -371,7 +372,7 @@ void TickZelda() //Tick function for Zelda song
 }
 void TickSW() //Tick function for Star Wars song
 {
-	buttonSW = ~PINA & 0x04;
+	//buttonSW = ~PINA & 0x04;
 
 	switch(SWstate)
 	{
@@ -408,7 +409,7 @@ void TickSW() //Tick function for Star Wars song
 		
 		
 		case Play2:
-		if(k < lengthSW[lengthIncSW])
+		if(k < lengthSW[lengthIncSW] && (!buttonStop))
 		{
 			k++;
 		}
@@ -419,7 +420,14 @@ void TickSW() //Tick function for Star Wars song
 			lengthIncSW++;
 			if(buttonStop)
 			{
+				k = 0;
+				notesIncSW = 0;
+				lengthIncSW = 0;
 				SWstate = Init2;
+			}
+			else
+			{
+				SWstate = Play2;
 			}
 			if(notesIncSW == numNotesSW)
 			{
@@ -508,7 +516,10 @@ int main(void)
 
 	while(1)
 	{	
-		buttonStop =~PINA & 0x08;
+		buttonPAC = ~PINA & 0x01;
+		buttonZelda = ~PINA & 0x02;
+		buttonSW = ~PINA & 0x04;
+		buttonStop = ~PINA & 0x08;
 		TimerSet(10); //set time
 		TickPAC(); //call songs
 		TickZelda();
