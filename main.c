@@ -7,7 +7,9 @@
  */
 
 #include <avr/io.h> // main io
+
 #include <avr/interrupt.h> //include interrupts
+
 #include "io.c" //included from directory
 
 #define PAC_B4 493.88//These are all my defined tones, I looked for a tone directory but didnt find one for atmel studio, but this works fine. it is alot of code.
@@ -144,7 +146,7 @@ unsigned char notesIncZelda;
 unsigned char lengthIncZelda;
 unsigned char numNotesZelda = 44;
 
-unsigned char buttonSW; //variables for Star Wars Son "Imperial March"
+unsigned char buttonSW; //variables for Star Wars Song "Imperial March"
 unsigned char notesIncSW;
 unsigned char lengthIncSW;
 unsigned char numNotesSW = 38;
@@ -159,7 +161,7 @@ enum PACstates {Start0, Init0, Ready0, Play0} PACstate; //enum for state machine
 enum Zeldastates {Start1, Init1, Ready1, Play1} Zeldastate;
 enum SWstates {Start2, Init2, Ready2, Play2} SWstate;
 enum Stopstates {Start3, Init3, Stop1} Stopstate;
-
+enum Menustates {Menuinit, MainMenu, Menuplay, } Menustate;
 
 double notesPAC[] = //notes for pacman song
 {
@@ -219,9 +221,6 @@ double lengthSW[] = //length of notes played for star wars song
 		
 void TickPAC() //Tick function for PACMAN
 {
-	//buttonPAC = ~PINA & 0x01;
-	//buttonStop = ~PINA & 0x08;
-	
 	switch(PACstate)
 	{
 		case Start0:
@@ -229,6 +228,7 @@ void TickPAC() //Tick function for PACMAN
 		break;
 		
 		case Init0:
+		
 		i = 0;
 		notesIncPAC = 0;
 		lengthIncPAC = 0;	
@@ -243,6 +243,7 @@ void TickPAC() //Tick function for PACMAN
 		break;
 		
 		case Ready0:
+
 		if(buttonPAC)
 		{
 			PACstate = Ready0;
@@ -255,6 +256,7 @@ void TickPAC() //Tick function for PACMAN
 		
 		
 		case Play0:
+		
 		if(i < lengthPAC[lengthIncPAC] && (!buttonStop))
 		{
 			i++;
@@ -282,9 +284,9 @@ void TickPAC() //Tick function for PACMAN
 			}
 			else
 			{
+				
 				set_PWM(notesPAC[notesIncPAC]);
 			}
-			
 		}
 		break;
 		
@@ -293,10 +295,10 @@ void TickPAC() //Tick function for PACMAN
 		break;
 	}
 }
+
 void TickZelda() //Tick function for Zelda song
 {
-	//buttonZelda = ~PINA & 0x02;
-	//buttonStop =~PINA & 0x08;
+	
 
 	switch(Zeldastate)
 	{
@@ -370,9 +372,9 @@ void TickZelda() //Tick function for Zelda song
 		break;
 	}
 }
+
 void TickSW() //Tick function for Star Wars song
 {
-	//buttonSW = ~PINA & 0x04;
 
 	switch(SWstate)
 	{
@@ -445,9 +447,6 @@ void TickSW() //Tick function for Star Wars song
 		break;
 	}
 }
-// 0.954 hz is lowest frequency possible with this function,
-// based on settings in PWM_on()
-// Passing in 0 as the frequency will stop the speaker from generating sound
 
 void set_PWM(double frequency) {
 	static double current_frequency; // Keeps track of the currently set frequency
@@ -468,6 +467,7 @@ void set_PWM(double frequency) {
 		current_frequency = frequency; // Updates the current frequency
 	}
 }
+
 void PWM_on() {
 	TCCR3A = (1 << COM3A0);
 	// COM3A0: Toggle PB6 on compare match between counter and OCR3A
@@ -476,10 +476,12 @@ void PWM_on() {
 	// CS31 & CS30: Set a prescaler of 64
 	set_PWM(0);
 }
+
 void PWM_off() {
 	TCCR3A = 0x00;
 	TCCR3B = 0x00;
 }
+
 void TimerOn() {
 	TCCR1B = 0x0B;
 	OCR1A = 125;
@@ -488,12 +490,15 @@ void TimerOn() {
 	_avr_timer_cntcurr = _avr_timer_M;
 	SREG |= 0x80;
 }
+
 void TimerOff() {
 	TCCR1B = 0x00;
 }
+
 void TimerISR() {
 	TimerFlag = 1;
 }// In our approach, the C programmer does not touch this ISR, but rather TimerISR()
+
 ISR(TIMER1_COMPA_vect) {
 	// CPU automatically calls when TCNT1 == OCR1 (every 1 ms per TimerOn settings)
 	_avr_timer_cntcurr--; // Count down to 0 rather than up to TOP
@@ -502,25 +507,33 @@ ISR(TIMER1_COMPA_vect) {
 		_avr_timer_cntcurr = _avr_timer_M;
 	}
 }// Set TimerISR() to tick every M ms
+
 void TimerSet(unsigned long M) {
 	_avr_timer_M = M;
 	_avr_timer_cntcurr = _avr_timer_M;
 }
+
 int main(void)
 {
 	DDRA = 0x00; PORTA = 0xFF;	//initialize and set inputs/outputs
 	DDRB = 0xFF; PORTB = 0x00;
-	
+	DDRC = 0xFF; PORTC = 0x00; // LCD data lines
+	DDRD = 0xFF; PORTD = 0x00; // LCD control lines
+	 
 	PWM_on(); //turn on PWM
 	TimerOn(); //turn timer on
-
+	LCD_init(); //initialize LCD
+	
+	
 	while(1)
 	{	
-		buttonPAC = ~PINA & 0x01;
+		buttonPAC = ~PINA & 0x01; //buttons for songs/stop features
 		buttonZelda = ~PINA & 0x02;
 		buttonSW = ~PINA & 0x04;
 		buttonStop = ~PINA & 0x08;
+		
 		TimerSet(10); //set time
+		
 		TickPAC(); //call songs
 		TickZelda();
 		TickSW();
