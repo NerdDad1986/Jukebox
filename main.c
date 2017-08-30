@@ -257,6 +257,8 @@ void TickPAC() //Tick function for PACMAN
 		
 		case Play0:
 		
+		LCD_DisplayString(1, (const unsigned char*)("PacMan"));
+		
 		if(i < lengthPAC[lengthIncPAC] && (!buttonStop))
 		{
 			i++;
@@ -335,6 +337,9 @@ void TickZelda() //Tick function for Zelda song
 		
 		
 		case Play1:
+		
+		LCD_DisplayString(1, (const unsigned char*)("Zelda"));
+		
 		if(j < lengthZelda[lengthIncZelda] && (!buttonStop))
 		{
 			j++;
@@ -411,6 +416,9 @@ void TickSW() //Tick function for Star Wars song
 		
 		
 		case Play2:
+		
+		LCD_DisplayString(1, (const unsigned char*)("Star Wars"));
+		
 		if(k < lengthSW[lengthIncSW] && (!buttonStop))
 		{
 			k++;
