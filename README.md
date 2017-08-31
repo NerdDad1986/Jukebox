@@ -8,12 +8,12 @@ PINB for output to speaker and lights
 PINC and PIND for LCD display
 
 Components:
-16 pin LCD display
-ATMEGA1284 microcontroller
-4 buttons
-2 potentiometers for volume and screen contrast (10k ohm and 1k ohm)
-piezo buzzer
-5 green LEDs
-5V power supply
-jumper wires
+16 pin LCD display,
+ATMEGA1284 microcontroller,
+4 buttons,
+2 potentiometers for volume and screen contrast (10k ohm and 1k ohm),
+piezo buzzer,
+7 green LEDs in smiley face pattern,
+5V power supply,
+jumper wires.
 
