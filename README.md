@@ -3,9 +3,9 @@ Created this jukebox to play a few songs that I enjoy. It is using the ATMEGA 12
 
 Build:
 In this project I am utilizing:
-PINA as inputs from user buttons
-PINB for output to speaker and lights
-PINC and PIND for LCD display
+PINA as inputs from user buttons,
+PINB for output to speaker and lights,
+PINC and PIND for LCD display.
 
 Components:
 16 pin LCD display,
