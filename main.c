@@ -283,6 +283,7 @@ void TickPAC() //Tick function for PACMAN
 			if(notesIncPAC == numNotesPAC)
 			{
 				PACstate = Init0;
+				LCD_DisplayString(1, (const unsigned char*)("Shane's Jukebox-Choose a song"));
 			}
 			else
 			{
@@ -364,6 +365,7 @@ void TickZelda() //Tick function for Zelda song
 			if(notesIncZelda == numNotesZelda)
 			{
 				Zeldastate = Init1;
+				LCD_DisplayString(1, (const unsigned char*)("Shane's Jukebox-Choose a song"));
 			}
 			else
 			{
@@ -447,6 +449,7 @@ void TickSW() //Tick function for Star Wars song
 			if(notesIncSW == numNotesSW)
 			{
 				SWstate = Init2;
+				LCD_DisplayString(1, (const unsigned char*)("Shane's Jukebox-Choose a song"));
 			}
 			else
 			{
@@ -540,7 +543,7 @@ int main(void)
 	TimerOn(); //turn timer on
 	
 	LCD_init(); //initialize LCD
-	
+	LCD_DisplayString(1, (const unsigned char*)("Shane's Jukebox-Choose a song"));
 	while(1)
 	{	
 		buttonPAC = ~PINA & 0x01; //buttons for songs/stop features
