@@ -257,8 +257,6 @@ void TickPAC() //Tick function for PACMAN
 		
 		case Play0:
 		
-		LCD_DisplayString(1, (const unsigned char*)("PacMan"));
-		
 		if(i < lengthPAC[lengthIncPAC] && (!buttonStop))
 		{
 			i++;
@@ -274,10 +272,12 @@ void TickPAC() //Tick function for PACMAN
 				i = 0;
 				notesIncPAC = 0;
 				lengthIncPAC = 0;
+				LCD_DisplayString(1, (const unsigned char*)("Shane's Jukebox-Choose a song"));
 				PACstate = Init0;
 			}
 			else
 			{
+				LCD_DisplayString(1, (const unsigned char*)("PacMan"));
 				PACstate = Play0;
 			}
 			if(notesIncPAC == numNotesPAC)
@@ -338,8 +338,6 @@ void TickZelda() //Tick function for Zelda song
 		
 		case Play1:
 		
-		LCD_DisplayString(1, (const unsigned char*)("Zelda"));
-		
 		if(j < lengthZelda[lengthIncZelda] && (!buttonStop))
 		{
 			j++;
@@ -355,10 +353,12 @@ void TickZelda() //Tick function for Zelda song
 				j = 0;
 				notesIncZelda = 0;
 				lengthIncZelda = 0;
+				LCD_DisplayString(1, (const unsigned char*)("Shane's Jukebox-Choose a song"));
 				Zeldastate = Init1;
 			}
 			else
 			{
+				LCD_DisplayString(1, (const unsigned char*)("Zelda"));
 				Zeldastate = Play1;
 			}
 			if(notesIncZelda == numNotesZelda)
@@ -435,12 +435,12 @@ void TickSW() //Tick function for Star Wars song
 				k = 0;
 				notesIncSW = 0;
 				lengthIncSW = 0;		
-				LCD_DisplayString(1, (const unsigned char*)("Choose a song"));
+				LCD_DisplayString(1, (const unsigned char*)("Shane's Jukebox-Choose a song"));
 				SWstate = Init2;
 			}
 			else
 			{
-						LCD_DisplayString(1, (const unsigned char*)("Star Wars"));
+				LCD_DisplayString(1, (const unsigned char*)("Star Wars"));
 
 				SWstate = Play2;
 			}
