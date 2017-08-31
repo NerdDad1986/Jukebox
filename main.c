@@ -385,13 +385,16 @@ void TickSW() //Tick function for Star Wars song
 	{
 		case Start2:
 		SWstate = Init2;
+		
 		break;
 		
 		
 		case Init2:
+		
 		k = 0;
 		notesIncSW = 0;
 		lengthIncSW = 0;
+
 		if(!(buttonSW))
 		{
 			SWstate = Init2;
@@ -417,7 +420,6 @@ void TickSW() //Tick function for Star Wars song
 		
 		case Play2:
 		
-		LCD_DisplayString(1, (const unsigned char*)("Star Wars"));
 		
 		if(k < lengthSW[lengthIncSW] && (!buttonStop))
 		{
@@ -432,11 +434,14 @@ void TickSW() //Tick function for Star Wars song
 			{
 				k = 0;
 				notesIncSW = 0;
-				lengthIncSW = 0;
+				lengthIncSW = 0;		
+				LCD_DisplayString(1, (const unsigned char*)("Choose a song"));
 				SWstate = Init2;
 			}
 			else
 			{
+						LCD_DisplayString(1, (const unsigned char*)("Star Wars"));
+
 				SWstate = Play2;
 			}
 			if(notesIncSW == numNotesSW)
@@ -448,6 +453,7 @@ void TickSW() //Tick function for Star Wars song
 				set_PWM(notesSW[notesIncSW]);
 			}
 		}
+		
 		break;
 		
 		default:
@@ -529,9 +535,11 @@ int main(void)
 	DDRD = 0xFF; PORTD = 0x00; // LCD control lines
 	 
 	PWM_on(); //turn on PWM
-	TimerOn(); //turn timer on
-	LCD_init(); //initialize LCD
 	
+	TimerSet(10); //set time
+	TimerOn(); //turn timer on
+	
+	LCD_init(); //initialize LCD
 	
 	while(1)
 	{	
@@ -540,8 +548,6 @@ int main(void)
 		buttonSW = ~PINA & 0x04;
 		buttonStop = ~PINA & 0x08;
 		
-		TimerSet(10); //set time
-		
 		TickPAC(); //call songs
 		TickZelda();
 		TickSW();
@@ -549,4 +555,4 @@ int main(void)
 		while(!TimerFlag){}
 		TimerFlag = 0;
 	}
-}
+	}
